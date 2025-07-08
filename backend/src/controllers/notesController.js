@@ -63,3 +63,24 @@ export async function deleteNote(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+export async function getNote(req, res) {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid note ID" });
+    }
+
+    const note = await Note.findById(id);
+
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+
+    res.json(note);
+  } catch (error) {
+    console.error("Error in getNote controller", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
